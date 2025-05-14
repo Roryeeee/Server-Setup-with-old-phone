@@ -1,126 +1,84 @@
-📱 DIY Music Server with an Old Android Phone + External Hard Drive
-I turned an old Android phone into a self-hosted music server using open-source tools, a little DIY spirit, and minimal hardware. This project marks my first step into the world of homelabs and self-hosting.
+🎵 Home Music Server on an Old Android Device
+This is my first step into homelabbing—I repurposed an old Android device into a private music streaming server using Termux, Ubuntu (via proot-distro), and Navidrome, with an external hard drive for music storage.
 
-🧩 What I Used
-📦 Hardware
-Old Android phone (no root required)
+🚀 Features
+Self-hosted Navidrome server on Android
 
-External hard drive (for storing music)
+Access music via browser or mobile (Ultrasonic)
 
-Dock with Ethernet, USB, and USB-C ports
+External hard drive for large storage
 
-Phone stand (for a clean, organized setup)
+Organized with a USB-C dock, Ethernet, and phone stand
 
-🛠️ Software
-Termux – Terminal emulator and Linux environment for Android
+🧰 What I Used
+Termux – Terminal emulator for Android
 
-proot-distro – Used to install Ubuntu inside Termux
+proot-distro – To run Ubuntu on Termux
 
-Navidrome – Lightweight music server
+Ubuntu (via proot) – Lightweight Linux environment
 
-Ultrasonic – Android app to stream music from Navidrome
+Navidrome – Music server compatible with Subsonic clients
 
-⚙️ Setup Instructions
-1. Install Termux
-Download Termux from F-Droid (recommended) or Google Play Store.
+Ultrasonic – Mobile app for music playback
 
-2. Install proot-distro and Ubuntu
-bash
-Copy
-Edit
-pkg update && pkg upgrade
-pkg install proot-distro
+External HDD – For music files
+
+USB-C dock – For connecting Ethernet and storage
+
+Phone stand – Just to keep it clean and neat
+
+🛠 Setup Instructions
+1. Install Termux & Setup Distro
+```bash
+pkg update && pkg upgrade -y
+pkg install proot-distro -y
 proot-distro install ubuntu
 proot-distro login ubuntu
-3. Set Up Ubuntu Environment
-Once inside the Ubuntu shell:
-
-bash
-Copy
-Edit
-apt update && apt upgrade
-apt install curl wget unzip
-4. Mount the External Hard Drive
-Ensure your hard drive is recognized by the phone and mounted in shared storage (accessible via /storage or /mnt in Termux). You may need to allow Termux access to file storage:
-
-bash
-Copy
-Edit
+```
+2. Inside Ubuntu: Install Packages
+```bash
+apt update && apt upgrade -y
+apt install curl wget unzip nano -y
+```
+3. Exit Ubuntu and Set Up Storage Access
+```bash
+exit
 termux-setup-storage
-Then navigate to your mounted drive (e.g., /storage/XXXX-XXXX/Music/).
-
-You can create a symbolic link inside Ubuntu to point to your music folder:
-
-bash
-Copy
-Edit
+Allow storage permissions when prompted.
+```
+4. Re-Enter Ubuntu and Link Music Folder
+```bash
+proot-distro login ubuntu
 ln -s /storage/XXXX-XXXX/Music /root/music
-Replace XXXX-XXXX with your drive's actual ID.
-
-5. Install Navidrome
-Download and install Navidrome:
-
-bash
-Copy
-Edit
+Replace XXXX-XXXX with your drive's UUID.
+```
+5. Download and Install Navidrome
+```bash
 cd /root
 wget https://github.com/navidrome/navidrome/releases/latest/download/navidrome-linux-arm64.tar.gz
 tar -xzf navidrome-linux-arm64.tar.gz
+mkdir /opt
 mv navidrome /opt/
-Create a config file:
-
-bash
-Copy
-Edit
+```
+6. Configure Navidrome
+```bash
 mkdir /root/navidrome
 nano /root/navidrome/navidrome.toml
-Paste this into the file:
+```
+Paste this config:
 
-toml
-Copy
-Edit
+```ini
 MusicFolder = "/root/music"
 Port = "4533"
-Run Navidrome:
+```
+Save with Ctrl + O, press Enter, then Ctrl + X.
 
-bash
-Copy
-Edit
+7. Run Navidrome
+```bash
 /opt/navidrome/navidrome
-6. Access Your Music Server
-Open your phone's browser (or another device on the same network)
+```
+🎧 Access the Server
+Visit http://<your_local_IP>:4533 on browser
 
-Go to: http://<your_phone_ip>:4533
-
-Login with default creds: admin / admin
-
-Change the admin password immediately from the UI.
-
-7. Install Ultrasonic on Your Phone
-Install Ultrasonic from F-Droid or GitHub
-
-Connect it to your Navidrome instance using your phone’s local IP and port 4533
-
-🧼 Bonus: My Setup
-For aesthetics and practicality:
-
-A simple phone stand keeps everything tidy and gives it that homelab feel ✨
-
-🚀 What's Next?
-This was my first step into the world of homelabbing. Next, I plan to:
-
-Explore VPN setups for remote access
-
-Try adding AdGuard Home for network-wide ad-blocking
-
-Expand into other self-hosted services (e.g., file sharing, note-taking, etc.)
-
-🧠 Why Do This?
-Repurpose old hardware
-
-Learn Linux, networking, and self-hosting
-
-Own your data and your services
-
-Just for fun 😄
+Or use the Ultrasonic app with Subsonic protocol
 
